@@ -44,8 +44,8 @@ impl MapBuilder {
                         self.map.tiles[idx] = TileType::Floor;
                     }
                 });
+                self.rooms.push(room)
             }
-            self.rooms.push(room)
         }
     }
     fn apply_vertical_tunnel(&mut self, y1: i32, y2: i32, x: i32) {
