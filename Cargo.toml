@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 bracket-lib="~0.8.1"
+legion={version = "=0.3.1", default-features = false, features = ["serialize", "crossbeam-events", "codegen", "wasm-bindgen"] }
