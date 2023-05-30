@@ -3,7 +3,7 @@ use crate::prelude::*;
 #[system]
 #[read_component(Point)]
 #[read_component(MovingRandomly)]
-pub fn random_move(ecs: &mut SubWorld, commands: &mut CommandBuffer, #[resource] map: &Map) {
+pub fn random_move(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
     let mut movers = <(Entity, &Point, &MovingRandomly)>::query();
     movers.iter_mut(ecs).for_each(|(entity, position, _)| {
         let mut rng = RandomNumberGenerator::new();
