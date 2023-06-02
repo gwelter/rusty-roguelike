@@ -15,6 +15,7 @@ mod prelude {
     pub const SCREEN_HEIGHT: i32 = 50;
     pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
     pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 2;
+    pub const HUD_SCALE: i32 = 2;
     pub use crate::camera::*;
     pub use crate::components::*;
     pub use crate::map::*;
@@ -68,6 +69,9 @@ impl GameState for State {
         ctx.set_active_console(2);
         ctx.cls();
         self.resources.insert(ctx.key);
+        // To go back to the same console as the map and entities, use:
+        ctx.set_active_console(0);
+        self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
         let current_state = *self.resources.get::<TurnState>().unwrap();
         match current_state {
             TurnState::AwaitingInput => self
@@ -95,7 +99,11 @@ fn main() -> BError {
         .with_font("terminal8x8.png", 8, 8)
         .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
         .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
-        .with_simple_console_no_bg(DISPLAY_WIDTH * 2, DISPLAY_HEIGHT * 2, "terminal8x8.png")
+        .with_simple_console_no_bg(
+            DISPLAY_WIDTH * HUD_SCALE,
+            DISPLAY_HEIGHT * HUD_SCALE,
+            "terminal8x8.png",
+        )
         .build()?;
     main_loop(context, State::new())
 }
