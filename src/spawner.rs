@@ -27,7 +27,7 @@ pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Poin
             color: ColorPair::new(WHITE, BLACK),
             glyph,
         },
-        MovingRandomly,
+        ChasingPlayer,
         Health {
             current: hp,
             max: hp,
@@ -41,5 +41,5 @@ fn goblin() -> (i32, String, FontCharType) {
 }
 
 fn orc() -> (i32, String, FontCharType) {
-    (2, "Orc".to_string(), to_cp437('o'))
+    (2, "Orc".to_string(), to_cp437('O'))
 }
