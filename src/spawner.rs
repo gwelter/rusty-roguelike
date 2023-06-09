@@ -1,5 +1,18 @@
 use crate::prelude::*;
 
+pub fn spawn_amulet_of_yala(ecs: &mut World, pos: Point) {
+    ecs.push((
+        Item,
+        AmuletOfYala,
+        Name("Amulet of Yala".to_string()),
+        Render {
+            color: ColorPair::new(WHITE, BLACK),
+            glyph: to_cp437('|'),
+        },
+        pos,
+    ));
+}
+
 pub fn spawn_player(ecs: &mut World, pos: Point) {
     ecs.push((
         Player,

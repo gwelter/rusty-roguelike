@@ -5,6 +5,7 @@ pub struct MapBuilder {
     pub map: Map,
     pub rooms: Vec<Rect>,
     pub player_start: Point,
+    pub amulet_start: Point,
 }
 
 impl MapBuilder {
@@ -13,11 +14,32 @@ impl MapBuilder {
             map: Map::new(),
             rooms: Vec::new(),
             player_start: Point::zero(),
+            amulet_start: Point::zero(),
         };
         map_builder.fill(TileType::Wall);
         map_builder.build_random_rooms(rng);
         map_builder.build_corridors(rng);
         map_builder.player_start = map_builder.rooms[0].center();
+
+        let dijkstra_map = DijkstraMap::new(
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
+            &vec![map_builder.map.point2d_to_index(map_builder.player_start)], // start position for the algorithm
+            &map_builder.map,
+            1024.0,
+        );
+        const UNREACHABLE: &f32 = &f32::MAX;
+        map_builder.amulet_start = map_builder.map.index_to_point2d(
+            dijkstra_map
+                .map
+                .iter()
+                .enumerate()
+                .filter(|(_, dist)| *dist < UNREACHABLE)
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
+                .unwrap()
+                .0,
+        );
+
         map_builder
     }
     fn fill(&mut self, tile: TileType) {
