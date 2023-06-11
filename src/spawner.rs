@@ -22,6 +22,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
             glyph: to_cp437('@'),
         },
         Health { current: 5, max: 5 },
+        FieldOfView::new(8),
     ));
 }
 
@@ -42,6 +43,7 @@ pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Poin
             current: hp,
             max: hp,
         },
+        FieldOfView::new(6),
         Name(name),
     ));
 }

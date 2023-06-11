@@ -4,7 +4,12 @@ use crate::prelude::*;
 #[read_component(Point)]
 #[read_component(Name)]
 #[read_component(Health)]
+#[read_component(Player)]
+#[read_component(FieldOfView)]
 pub fn tooltips(ecs: &SubWorld, #[resource] mouse_pos: &Point, #[resource] camera: &Camera) {
+    let mut fov = <&FieldOfView>::query().filter(component::<Player>());
+    let player_fov = fov.iter(ecs).nth(0).unwrap();
+
     let mut positions = <(Entity, &Point, &Name)>::query();
     let offset = Point::new(camera.left_x, camera.top_y);
     let map_pos = *mouse_pos + offset;
@@ -12,7 +17,7 @@ pub fn tooltips(ecs: &SubWorld, #[resource] mouse_pos: &Point, #[resource] camer
     draw_batch.target(2); // to render on top of the player and monster layers
     positions
         .iter(ecs)
-        .filter(|(_, pos, _)| **pos == map_pos) // Filter out entities that are at the mouse position
+        .filter(|(_, pos, _)| **pos == map_pos && player_fov.visible_tiles.contains(*pos)) // Filter out entities that are at the mouse position
         .for_each(|(entity, _, name)| {
             let screen_pos = *mouse_pos * HUD_SCALE;
             let display =
