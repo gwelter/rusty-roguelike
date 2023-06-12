@@ -12,9 +12,11 @@ pub fn map_render(ecs: &SubWorld, #[resource] map: &Map, #[resource] camera: &Ca
         for x in camera.left_x..=camera.right_x {
             let point = Point::new(x, y);
             let offset = Point::new(camera.left_x, camera.top_y);
+            // Se o ponto estiver dentro do mapa e estiver visível ou revelado
             if map.in_bounds(point)
                 && (player_fov.visible_tiles.contains(&point) | map.revealed_tiles[map_index(x, y)])
             {
+                // Se o ponto estiver visível, pinta de branco, senão de cinza
                 let tint = if player_fov.visible_tiles.contains(&point) {
                     WHITE
                 } else {

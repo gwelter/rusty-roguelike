@@ -17,7 +17,7 @@ pub fn tooltips(ecs: &SubWorld, #[resource] mouse_pos: &Point, #[resource] camer
     draw_batch.target(2); // to render on top of the player and monster layers
     positions
         .iter(ecs)
-        .filter(|(_, pos, _)| **pos == map_pos && player_fov.visible_tiles.contains(*pos)) // Filter out entities that are at the mouse position
+        .filter(|(_, pos, _)| **pos == map_pos && player_fov.visible_tiles.contains(*pos)) // Filter entities that are at the mouse position and currently visible to the player
         .for_each(|(entity, _, name)| {
             let screen_pos = *mouse_pos * HUD_SCALE;
             let display =

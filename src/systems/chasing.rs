@@ -7,7 +7,7 @@ use crate::prelude::*;
 #[read_component(Player)]
 #[read_component(FieldOfView)]
 pub fn chasing(#[resource] map: &Map, ecs: &SubWorld, commands: &mut CommandBuffer) {
-    // Entidades
+    // Entidades que persegem o jogador e que tenham campo de visão
     let mut movers = <(Entity, &Point, &ChasingPlayer, &FieldOfView)>::query()
         .filter(component::<ChasingPlayer>());
     let mut positions = <(Entity, &Point, &Health)>::query();

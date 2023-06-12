@@ -22,6 +22,7 @@ pub fn movement(
                 // Se for o player, atualiza a camera
                 if entry.get_component::<Player>().is_ok() {
                     camera.on_player_move(want_move.destination);
+                    // marca os tiles como revelados se estiverem no campo de visão de forma cumulativa, uma vez revelado, sempre revelado
                     fov.visible_tiles.iter().for_each(|pos| {
                         map.revealed_tiles[map_index(pos.x, pos.y)] = true;
                     });
