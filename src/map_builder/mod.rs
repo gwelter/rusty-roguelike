@@ -1,9 +1,11 @@
 mod automata;
+mod drunkard;
 mod empty;
 mod rooms;
 
 use crate::prelude::*;
 use automata::CellularAutomataArchitect;
+use drunkard::DrunkardsWalkArchitect;
 use empty::EmptyArchitect;
 use rooms::RoomsArchitect;
 const NUM_ROOMS: usize = 20;
@@ -18,13 +20,13 @@ pub struct MapBuilder {
 
 impl MapBuilder {
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut architect = CellularAutomataArchitect {};
+        let mut architect = DrunkardsWalkArchitect {};
         architect.new(rng)
     }
     fn fill(&mut self, tile: TileType) {
         self.map.tiles.iter_mut().for_each(|t| *t = tile);
     }
-    fn find_most_distance(&self) -> Point {
+    fn find_most_distant(&self) -> Point {
         let dijkstra_map = DijkstraMap::new(
             SCREEN_WIDTH,
             SCREEN_HEIGHT,
