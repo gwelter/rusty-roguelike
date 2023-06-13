@@ -18,6 +18,7 @@ impl MapArchitect for CellularAutomataArchitect {
             self.iteration(&mut mb.map);
         }
         let start = self.find_start(&mb.map);
+        mb.monster_spawn = mb.spawn_monsters(&start, rng);
         mb.player_start = start;
         mb.amulet_start = mb.find_most_distance();
         mb
@@ -28,7 +29,7 @@ impl CellularAutomataArchitect {
     fn random_noise_map(&mut self, rng: &mut RandomNumberGenerator, map: &mut Map) {
         map.tiles.iter_mut().for_each(|t| {
             let roll = rng.range(0, 100);
-            if roll > 55 {
+            if roll > 60 {
                 *t = TileType::Wall;
             } else {
                 *t = TileType::Floor;
@@ -52,7 +53,7 @@ impl CellularAutomataArchitect {
             for x in 1..SCREEN_WIDTH - 1 {
                 let neighbors = self.count_neighbors(x, y, map);
                 let idx = map_idx(x, y);
-                if neighbors > 3 || neighbors == 0 {
+                if neighbors > 4 || neighbors == 0 {
                     new_tiles[idx] = TileType::Wall;
                 } else {
                     new_tiles[idx] = TileType::Floor;

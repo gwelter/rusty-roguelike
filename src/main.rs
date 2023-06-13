@@ -64,10 +64,10 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
         spawn_player(&mut self.ecs, map_builder.player_start);
         spawn_amulet_of_yala(&mut self.ecs, map_builder.amulet_start);
-        // map_builder
-        //     .monster_spawn
-        //     .iter()
-        //     .for_each(|position| spawn_monster(&mut self.ecs, &mut rng, *position));
+        map_builder
+            .monster_spawn
+            .iter()
+            .for_each(|position| spawn_monster(&mut self.ecs, &mut rng, *position));
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
         self.resources.insert(TurnState::AwaitingInput);
