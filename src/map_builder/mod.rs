@@ -1,35 +1,39 @@
+mod automata;
+mod empty;
+mod rooms;
+
 use crate::prelude::*;
+use automata::CellularAutomataArchitect;
+use empty::EmptyArchitect;
+use rooms::RoomsArchitect;
 const NUM_ROOMS: usize = 20;
 
 pub struct MapBuilder {
     pub map: Map,
     pub rooms: Vec<Rect>,
+    pub monster_spawn: Vec<Point>,
     pub player_start: Point,
     pub amulet_start: Point,
 }
 
 impl MapBuilder {
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut map_builder = MapBuilder {
-            map: Map::new(),
-            rooms: Vec::new(),
-            player_start: Point::zero(),
-            amulet_start: Point::zero(),
-        };
-        map_builder.fill(TileType::Wall);
-        map_builder.build_random_rooms(rng);
-        map_builder.build_corridors(rng);
-        map_builder.player_start = map_builder.rooms[0].center();
-
+        let mut architect = CellularAutomataArchitect {};
+        architect.new(rng)
+    }
+    fn fill(&mut self, tile: TileType) {
+        self.map.tiles.iter_mut().for_each(|t| *t = tile);
+    }
+    fn find_most_distance(&self) -> Point {
         let dijkstra_map = DijkstraMap::new(
             SCREEN_WIDTH,
             SCREEN_HEIGHT,
-            &vec![map_builder.map.point2d_to_index(map_builder.player_start)], // start position for the algorithm
-            &map_builder.map,
+            &vec![self.map.point2d_to_index(self.player_start)], // start position for the algorithm
+            &self.map,
             1024.0,
         );
         const UNREACHABLE: &f32 = &f32::MAX;
-        map_builder.amulet_start = map_builder.map.index_to_point2d(
+        self.map.index_to_point2d(
             dijkstra_map
                 .map
                 .iter()
@@ -38,12 +42,7 @@ impl MapBuilder {
                 .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
                 .unwrap()
                 .0,
-        );
-
-        map_builder
-    }
-    fn fill(&mut self, tile: TileType) {
-        self.map.tiles.iter_mut().for_each(|t| *t = tile);
+        )
     }
     fn build_random_rooms(&mut self, rng: &mut RandomNumberGenerator) {
         while self.rooms.len() < NUM_ROOMS {
@@ -62,7 +61,7 @@ impl MapBuilder {
             if !overlap {
                 room.for_each(|p| {
                     if p.x > 0 && p.x < SCREEN_WIDTH && p.y > 0 && p.y < SCREEN_HEIGHT {
-                        let idx = map_index(p.x, p.y);
+                        let idx = map_idx(p.x, p.y);
                         self.map.tiles[idx] = TileType::Floor;
                     }
                 });
@@ -103,4 +102,8 @@ impl MapBuilder {
             }
         }
     }
+}
+
+trait MapArchitect {
+    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
 }

@@ -14,7 +14,7 @@ pub fn map_render(ecs: &SubWorld, #[resource] map: &Map, #[resource] camera: &Ca
             let offset = Point::new(camera.left_x, camera.top_y);
             // Se o ponto estiver dentro do mapa e estiver visível ou revelado
             if map.in_bounds(point)
-                && (player_fov.visible_tiles.contains(&point) | map.revealed_tiles[map_index(x, y)])
+                && (player_fov.visible_tiles.contains(&point) | map.revealed_tiles[map_idx(x, y)])
             {
                 // Se o ponto estiver visível, pinta de branco, senão de cinza
                 let tint = if player_fov.visible_tiles.contains(&point) {
@@ -22,7 +22,7 @@ pub fn map_render(ecs: &SubWorld, #[resource] map: &Map, #[resource] camera: &Ca
                 } else {
                     DARK_GRAY
                 };
-                let index = map_index(x, y);
+                let index = map_idx(x, y);
                 let glyph = match map.tiles[index] {
                     TileType::Floor => to_cp437('.'),
                     TileType::Wall => to_cp437('#'),
